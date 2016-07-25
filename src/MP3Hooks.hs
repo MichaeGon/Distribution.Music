@@ -24,23 +24,6 @@ mp3PreBuildHook = getCurrentDirectory
 mp3PostBuildHook :: IO ()
 mp3PostBuildHook = void (runCommand "killall afplay")
 
-{-}
-mp3PreBuildHookQ :: ExpQ
-mp3PreBuildHookQ = runIO ioActions >> [| return () |]
-    where
-        ioActions = getCurrentDirectory
-                >>= getDirectoryContents
-                >>= shuffle . mp3s
-                >>= br
-        br [] = return ()
-        br xs = (void . runCommand . (\x -> "afplay \"" ++ x ++ "\" &") . head) xs
-
-mp3PostBuildHookQ :: ExpQ
-mp3PostBuildHookQ = runIO ioActions >> [| return () |]
-    where
-        ioActions = void (runCommand "killall afplay")
--}
-
 mp3s :: [FilePath] -> [FilePath]
 mp3s = filter (".mp3" `isSuffixOf`)
 
