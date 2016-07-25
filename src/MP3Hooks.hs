@@ -1,6 +1,6 @@
 module MP3Hooks
-    ( mp3PreBuildHook
-    , mp3PostBuildHook
+    ( playMp3
+    , stopMp3
     ) where
 
 import Control.Monad
@@ -11,18 +11,18 @@ import System.Process
 import System.Random
 
 
-mp3PreBuildHook :: IO ()
-mp3PreBuildHook = getCurrentDirectory
-            >>= getDirectoryContents
-            >>= shuffle . mp3s
-            >>= br
-            where
-                br [] = return ()
-                br xs = (void . runCommand . (\x -> "afplay \"" ++ x ++ "\" &") . head) xs
+playMp3 :: IO ()
+playMp3 = getCurrentDirectory
+        >>= getDirectoryContents
+        >>= shuffle . mp3s
+        >>= br
+        where
+            br [] = return ()
+            br xs = void . runCommand . (\x -> "afplay \"" ++ x ++ "\" &") . head $ xs
 
 
-mp3PostBuildHook :: IO ()
-mp3PostBuildHook = void (runCommand "killall afplay")
+stopMp3 :: IO ()
+stopMp3 = void $ runCommand "killall afplay"
 
 mp3s :: [FilePath] -> [FilePath]
 mp3s = filter (".mp3" `isSuffixOf`)
