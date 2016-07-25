@@ -1,2 +1,2 @@
 # Distribution.Music
-happy compile time
+happy compile time (for Mac)
