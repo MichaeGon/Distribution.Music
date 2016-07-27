@@ -1,6 +1,8 @@
 module MP3Hooks
     ( playMp3
+    , playMp3'
     , stopMp3
+    , stopMp3'
     ) where
 
 import Control.Monad
