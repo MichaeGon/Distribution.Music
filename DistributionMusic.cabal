@@ -14,7 +14,7 @@ cabal-version:       >=1.10
 
 executable DistributionMusic
   hs-source-dirs:      src
-  main-is:             Setup.hs
+  main-is:             Main.hs
   other-modules:       MP3Hooks
   default-language:    Haskell2010
-  build-depends:       base >= 4.7 && < 5, Cabal, directory, process, random
+  build-depends:       base >= 4.7 && < 5, Cabal, directory, process, random, template-haskell
