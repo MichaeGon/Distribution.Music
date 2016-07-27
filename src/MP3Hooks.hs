@@ -10,19 +10,28 @@ import System.Directory
 import System.Process
 import System.Random
 
-
 playMp3 :: IO ()
-playMp3 = getCurrentDirectory
-        >>= getDirectoryContents
-        >>= shuffle . mp3s
-        >>= br
-        where
-            br [] = return ()
-            br xs = void . runCommand . (\x -> "afplay \"" ++ x ++ "\" &") . head $ xs
+playMp3 = pconfig >>= play
+    where
+        play [] = return ()
+        play xs = void . runCommand . (\x -> "afplay \"" ++ x ++ "\" &") . head $  xs
 
+playMp3' :: IO (Maybe ProcessHandle)
+playMp3' = pconfig >>= play
+        where
+            play [] = return Nothing
+            play xs = Just <$> (spawnCommand . (\x -> "afplay \"" ++ x ++ "\" &") . head) xs
+
+pconfig :: IO [FilePath]
+pconfig = getCurrentDirectory
+    >>= getDirectoryContents
+    >>= shuffle . mp3s
 
 stopMp3 :: IO ()
-stopMp3 = void $ runCommand "killall afplay"
+stopMp3 = callCommand "killall afplay"
+
+stopMp3' :: ProcessHandle -> IO ()
+stopMp3' = terminateProcess
 
 mp3s :: [FilePath] -> [FilePath]
 mp3s = filter (".mp3" `isSuffixOf`)
